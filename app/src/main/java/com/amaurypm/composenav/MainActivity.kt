@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.amaurypm.composenav.ui.theme.ComposeNavTheme
 import kotlinx.serialization.Serializable
 
@@ -54,7 +55,12 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Button(
                                 onClick = {
-                                    navController.navigate(DataScreenDestination)
+                                    navController.navigate(
+                                        DataScreenDestination(
+                                            name = "Beatriz",
+                                            age = 20
+                                        )
+                                    )
                                 }
                             ) {
                                 Text(
@@ -66,7 +72,11 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    composable<DataScreenDestination> {
+                    composable<DataScreenDestination> { backStackEntry ->
+
+                        //Recuperamos los datos recibidos
+                        val args = backStackEntry.toRoute<DataScreenDestination>()
+
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -76,14 +86,13 @@ class MainActivity : ComponentActivity() {
                         ) {
 
                             Text(
-                                text = "Datos recibidos",
+                                text = "Nombre: ${args.name}, ${args.age} años",
                                 fontSize = 32.sp,
                                 fontWeight = FontWeight.Bold
                             )
 
                         }
                     }
-
 
                 }
 
@@ -97,4 +106,7 @@ class MainActivity : ComponentActivity() {
 object MainScreenDestination
 
 @Serializable
-object DataScreenDestination
+data class DataScreenDestination(
+    val name: String,
+    val age: Int
+)
